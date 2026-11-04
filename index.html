@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101827"><title>PIXEL PARTY – Game Maker</title>
+<style>
+:root{--bg:#101827;--panel:#1b2940;--panel2:#243550;--ink:#f4f7fb;--muted:#a9b8ce;--accent:#78e0bd;--pink:#ff7ca8;--yellow:#ffd36e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#101827,#18253b);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}button,input,select{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:#102238;font-weight:800;cursor:pointer}button.secondary{background:var(--panel2);color:var(--ink);border:1px solid #40516b}button:disabled{opacity:.4;cursor:not-allowed}.wrap{max-width:1120px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:clamp(22px,4vw,34px);font-weight:1000;letter-spacing:1px}.brand span{color:var(--accent)}.muted{color:var(--muted)}.pill{display:inline-flex;padding:5px 10px;border-radius:999px;background:#30415c;color:#dbe8f7;font-size:12px;font-weight:800}.card{background:rgba(27,41,64,.94);border:1px solid #354761;border-radius:18px;padding:17px;box-shadow:0 12px 30px #0002}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.stack{display:grid;gap:14px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.grow{flex:1}.hidden{display:none!important}h1,h2,h3,p{margin-top:0}h2{font-size:22px;margin-bottom:8px}.hero{padding:28px 0 18px}.hero h1{font-size:clamp(32px,7vw,58px);line-height:1.02;margin:12px 0}.hero p{max-width:650px;color:var(--muted);font-size:17px}.field{background:#101b2d;color:var(--ink);border:1px solid #40516b;border-radius:11px;padding:11px;min-width:0}.field:focus{outline:2px solid var(--accent)}label{display:grid;gap:6px;color:var(--muted);font-size:13px}.genre{cursor:pointer;min-height:145px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#2b4261,#1a2940);border:2px solid transparent;border-radius:16px;padding:15px}.genre.selected{border-color:var(--accent)}.genre .emoji{font-size:35px}.genre b{font-size:19px}.genre small{color:var(--muted)}.bar{height:12px;background:#0e1929;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent);width:100%;transition:width .2s}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button.active{background:var(--accent);color:#102238}.players{display:flex;gap:8px;flex-wrap:wrap}.player{padding:8px 10px;background:#263a57;border-radius:10px;font-size:13px}.player.me{outline:2px solid var(--accent)}canvas{image-rendering:pixelated;image-rendering:crisp-edges;max-width:100%;touch-action:none;background:#dce9f2;border-radius:12px;border:3px solid #50627a}.editor-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.8fr);gap:14px}.tools{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.tools button{padding:8px 11px}.tools button.active{outline:2px solid var(--yellow)}.swatches{display:flex;gap:7px;flex-wrap:wrap}.swatch{width:28px;height:28px;border:2px solid #fff8;border-radius:8px;cursor:pointer}.score{font-size:30px;font-weight:900;color:var(--accent)}.notice{padding:12px;border-radius:12px;background:#263a57;color:#dbe8f7}.small{font-size:12px}.voteitem{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;background:#22334d;border-radius:12px}.footer{color:#8294ad;text-align:center;font-size:12px;padding:25px}.timer{font-size:38px;font-weight:1000;letter-spacing:2px}.modal{position:fixed;inset:0;background:#07101ddd;display:grid;place-items:center;padding:18px;z-index:5}.modal>.card{max-width:470px;width:100%}
+@media(max-width:700px){.editor-layout{grid-template-columns:1fr}.wrap{padding:12px}.card{padding:14px}.hero{padding-top:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand">PIXEL<span>PARTY</span></div><div class="row"><span id="connection" class="pill">Offline-Demo</span><span id="modeBadge" class="pill">UNI · STUMM</span></div></header>
+<main id="app">
+<section id="home" class="hero stack">
+<div class="pill">2–8 SPIELER · 2D PIXEL ART · QUERFORMAT</div>
+<h1>Gemeinsam bauen.<br><span style="color:var(--accent)">Zusammen spielen.</span></h1>
+<p>Wählt eine Idee, baut in drei Minuten euer eigenes kleines Spiel und findet heraus, wessen Ergänzung die Runde gewinnt.</p>
+<div class="grid">
+<div class="card stack"><h2>Neue Lobby</h2><label>Dein Spielername<input id="nameCreate" class="field" maxlength="16" value="Max"></label><label>Audio-Modus<select id="modeCreate" class="field"><option value="uni">Uni – komplett lautlos</option><option value="fun">Spaß – mit Sounds</option></select></label><button id="createBtn">Raum erstellen</button></div>
+<div class="card stack"><h2>Lobby beitreten</h2><label>Raumcode<input id="joinCode" class="field" maxlength="6" placeholder="z. B. A7K2Q9" style="text-transform:uppercase"></label><label>Dein Spielername<input id="nameJoin" class="field" maxlength="16" value="Spieler 2"></label><label>Audio-Modus<select id="modeJoin" class="field"><option value="uni">Uni – komplett lautlos</option><option value="fun">Spaß – mit Sounds</option></select></label><button class="secondary" id="joinBtn">Beitreten</button></div>
+</div>
+<div class="notice small">Hinweis: Ohne Backend läuft das Projekt im lokalen Demo-Modus. Für echte Verbindungen zwischen verschiedenen Geräten Supabase einrichten (Anleitung in README).</div>
+</section>
+<section id="lobby" class="stack hidden">
+<div class="row"><div class="grow"><span class="pill">LOBBY</span><h2 id="roomTitle">Raum</h2><div class="muted small">Teile den Code mit deinen Freunden.</div></div><div class="card"><div class="muted small">RAUMCODE</div><div class="row"><strong id="roomCode" style="font-size:25px;letter-spacing:3px">------</strong><button class="secondary" id="copyCode">Kopieren</button></div></div></div>
+<div class="card stack"><div class="row"><h2 class="grow">Spieler</h2><span class="pill" id="playerCount">1/8</span></div><div id="players" class="players"></div><div class="row"><label>Dein Audio-Modus<select id="modeLobby" class="field"><option value="uni">Uni – lautlos</option><option value="fun">Spaß – mit Sounds</option></select></label><button class="secondary" id="leaveBtn">Lobby verlassen</button></div></div>
+<div class="card stack"><div class="row"><div class="grow"><span class="pill">RUNDE 1</span><h2>Welche Art Spiel baut ihr?</h2></div><span class="pill">3 Vorschläge</span></div><p class="muted">Jeder stimmt auf seinem Gerät für einen Spieltyp ab. Bei Gleichstand entscheidet eine Stichwahl bzw. Zufall.</p><div id="genreChoices" class="grid"></div><div class="row"><button id="startVote" class="grow">Abstimmung starten</button><button id="randomGenres" class="secondary">Andere Vorschläge</button></div><div id="voteStatus" class="notice hidden"></div></div>
+</section>
+<section id="round" class="stack hidden">
+<div class="row"><div class="grow"><span class="pill" id="phasePill">KREATIVPHASE</span><h2 id="roundTitle">Erschafft euer Spiel</h2></div><div class="card" style="min-width:135px"><div class="muted small">ZEIT</div><div id="timer" class="timer">03:00</div></div></div>
+<div class="bar"><i id="timerBar"></i></div>
+<div class="card"><div class="row"><div class="grow"><h2 id="genreTitle">🏎️ Racing</h2><div class="muted small">Alle Änderungen werden im Raum geteilt, sobald ein Backend verbunden ist.</div></div><span class="pill" id="roundNo">RUNDE 1</span></div>
+<div class="editor-layout">
+<div class="stack"><canvas id="pixelCanvas" width="480" height="288"></canvas><div class="tools" id="tools"><button data-tool="paint" class="active">Malen</button><button data-tool="erase">Radierer</button><button data-tool="fill">Füllen</button><button data-tool="player">Figur</button><button data-tool="object">Objekt</button></div><div class="swatches" id="swatches"></div><div class="row"><button id="clearCanvas" class="secondary">Leeren</button><button id="saveCanvas" class="secondary">PNG exportieren</button></div></div>
+<div class="stack"><div class="card stack"><h3>Dein Beitrag</h3><label>Name deiner Ergänzung<input id="contributionName" class="field" placeholder="z. B. Turbo-Kart"></label><label>Was hast du hinzugefügt?<input id="contributionDesc" class="field" placeholder="Kurz beschreiben"></label><button id="addContribution">Beitrag einreichen</button><div class="muted small">Ein Beitrag pro Runde und Spieler. Die Pixelgrafik wird im lokalen Prototyp geteilt, wenn ein Backend aktiv ist.</div></div><div class="card stack"><h3>Beiträge dieser Runde</h3><div id="contributions" class="stack small muted">Noch keine Beiträge.</div></div></div>
+</div></div>
+<div class="card stack"><h3>Spieler & Punkte</h3><div id="roundPlayers" class="players"></div><div class="row"><button id="finishBuild" class="grow">Zeit abgelaufen – zur Bewertung</button></div></div>
+</section>
+<section id="review" class="stack hidden">
+<div class="card stack"><span class="pill">BEWERTUNG</span><h2>Welche Ergänzung war am geilsten?</h2><p class="muted">Stimmt für einen Beitrag. Nicht für euch selbst.</p><div id="contributionVotes" class="stack"></div><button id="finishContributionVote">Ergebnis der Ergänzungswahl</button></div>
+<div class="card stack"><h2>Jetzt wird gespielt!</h2><p class="muted">Im vollständigen Spiel wird hier das gemeinsam gebaute Genre-Minispiel gestartet. Im Prototyp stimmt ihr den Runden-Champion manuell ab.</p><div id="winnerChoices" class="stack"></div><button id="finishRound">Runde auswerten</button></div>
+</section>
+<section id="results" class="stack hidden">
+<div class="card stack"><span class="pill">RUNDE ABGESCHLOSSEN</span><h2 id="resultHeadline">Ergebnis</h2><div id="resultDetails" class="stack"></div><div class="row"><button id="nextRound" class="grow">Nächste Runde</button><button id="backHome" class="secondary">Zur Lobby</button></div></div>
+<div class="card stack"><h2>Gesamtwertung</h2><div id="leaderboard" class="stack"></div></div>
+</section>
+</main>
+<div class="footer">PIXEL PARTY · Eigenständiger Fan-inspirierter Prototyp · Kein offizielles Bit by Bit-Produkt</div>
+</div>
+<div id="toast" class="modal hidden"><div class="card stack"><h2 id="toastTitle">Info</h2><p id="toastText"></p><button id="toastClose">Okay</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const genres=[
+{name:"Racing",emoji:"🏎️",desc:"Strecken, Fahrzeuge, Rennen"},
+{name:"Adventure",emoji:"🗺️",desc:"Entdecken und Geschichten"},
+{name:"Puzzle",emoji:"🧩",desc:"Rätsel und clevere Ideen"},
+{name:"Simulation",emoji:"🏡",desc:"Bauen, verwalten, gestalten"},
+{name:"Sport",emoji:"⚽",desc:"Sportarten und Wettkämpfe"},
+{name:"Party Game",emoji:"🎉",desc:"Minispiele und Chaos"},
+{name:"Aufbau",emoji:"🏙️",desc:"Städte und Welten erschaffen"},
+{name:"Survival",emoji:"🌲",desc:"Sammeln, craften, überleben"},
+{name:"Plattformer",emoji:"🍄",desc:"Springen und Hindernisse"}
+];
+const colors=["#172b4d","#ffffff","#101820","#f44336","#ff9800","#ffdf4d","#4caf50","#20b8a8","#2196f3","#9c6ade","#f06292","#8b5a2b"];
+let state={room:null,players:[],me:null,mode:"uni",round:1,phase:"home",choices:[],votes:{},genre:null,contributions:[],contributionVotes:{},roundWinner:null,roundLoser:null,leaderboard:{},timer:180,interval:null,tool:"paint",color:colors[3],pixels:[],client:null,channel:null,host:false,local:true,buildEnd:0};
+const W=30,H=18,S=16;
+function toast(t,m){$("toastTitle").textContent=t;$("toastText").textContent=m;$("toast").classList.remove("hidden")}
+$("toastClose").onclick=()=>$("toast").classList.add("hidden");
+function show(id){["home","lobby","round","review","results"].forEach(x=>$(x).classList.toggle("hidden",x!==id));state.phase=id}
+function code(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function setMode(m){state.mode=m;$("modeBadge").textContent=m==="uni"?"UNI · STUMM":"SPASS · SOUND";if(m==="uni")stopAllAudio()}
+function stopAllAudio(){document.querySelectorAll("audio,video").forEach(x=>{x.pause();x.muted=true});}
+function createPlayer(name){return {id:Math.random().toString(36).slice(2,10),name:name||"Spieler",mode:state.mode,score:0}}
+function enterRoom(name,room,isHost){
+ state.room=room;state.host=isHost;state.me=createPlayer(name);state.players=[state.me];state.local=true;
+ $("roomCode").textContent=room;$("roomTitle").textContent="Gemeinsames Projekt";$("modeLobby").value=state.mode;renderPlayers();newChoices();show("lobby");
+}
+function renderPlayers(){ $("players").innerHTML="";state.players.forEach(p=>{let e=document.createElement("span");e.className="player"+(p.id===state.me.id?" me":"");e.textContent=p.name+(p.id===state.me.id?" (Du)":"");$("players").append(e)});$("playerCount").textContent=state.players.length+"/8";$("roundPlayers").innerHTML=state.players.map(p=>`<span class="player">${escapeHtml(p.name)} · ${p.score} P</span>`).join("")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function newChoices(){state.choices=shuffle(genres).slice(0,3);state.votes={};renderChoices()}
+function renderChoices(){ $("genreChoices").innerHTML="";state.choices.forEach(g=>{let b=document.createElement("button");b.className="genre"+(state.votes[state.me.id]===g.name?" selected":"");b.innerHTML=`<span class="emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small>`;b.onclick=()=>{state.votes[state.me.id]=g.name;renderChoices();$("voteStatus").classList.remove("hidden");$("voteStatus").textContent="Deine Stimme: "+g.name};$("genreChoices").append(b)})}
+function startBuild(){let counts={};Object.values(state.votes).forEach(v=>counts[v]=(counts[v]||0)+1);let max=Math.max(0,...Object.values(counts));let winners=state.choices.filter(g=>counts[g.name]===max);state.genre=(winners.length?winners:state.choices)[Math.floor(Math.random()*(winners.length?winners:state.choices).length)];state.contributions=[];state.contributionVotes={};state.roundWinner=null;state.roundLoser=null;state.pixels=Array(W*H).fill(null);$("genreTitle").textContent=state.genre.emoji+" "+state.genre.name;$("roundNo").textContent="RUNDE "+state.round;renderContributions();draw();renderPlayers();show("round");startTimer()}
+function startTimer(){clearInterval(state.interval);state.timer=180;state.buildEnd=Date.now()+180000;tick();state.interval=setInterval(tick,250)}
+function tick(){let left=Math.max(0,Math.ceil((state.buildEnd-Date.now())/1000));state.timer=left;$("timer").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");$("timerBar").style.width=(left/180*100)+"%";if(left<=0){clearInterval(state.interval);finishBuild()}}
+function finishBuild(){clearInterval(state.interval);show("review");renderReview()}
+function renderContributions(){$("contributions").innerHTML=state.contributions.length?state.contributions.map(c=>`<div class="voteitem"><span><b>${escapeHtml(c.title)}</b><br><span class="muted">${escapeHtml(c.desc)} · ${escapeHtml(c.player)}</span></span></div>`).join(""):"Noch keine Beiträge."}
+function renderReview(){$("contributionVotes").innerHTML="";state.contributions.forEach(c=>{let d=document.createElement("div");d.className="voteitem";d.innerHTML=`<span><b>${escapeHtml(c.title)}</b><br><span class="muted">${escapeHtml(c.player)} · ${escapeHtml(c.desc)}</span></span><button class="secondary">Abstimmen</button>`;d.querySelector("button").onclick=()=>{if(c.playerId===state.me.id)return toast("Eigener Beitrag","Du kannst nicht für deinen eigenen Beitrag stimmen.");state.contributionVotes[state.me.id]=c.id;[...$("contributionVotes").children].forEach(x=>x.style.outline="");d.style.outline="2px solid var(--accent)"};$("contributionVotes").append(d)});
+if(!state.contributions.length)$("contributionVotes").innerHTML='<div class="notice">Es wurden keine Beiträge eingereicht. Die Ergänzungswahl entfällt.</div>';
+$("winnerChoices").innerHTML="";state.players.forEach(p=>{let d=document.createElement("div");d.className="voteitem";d.innerHTML=`<span>${escapeHtml(p.name)}</span><button class="secondary">Rundensieger</button><button class="secondary">Letzter Platz</button>`;d.children[1].onclick=()=>{state.roundWinner=p.id;[...$("winnerChoices").children].forEach(x=>x.style.outline="");d.style.outline="2px solid var(--accent)"};d.children[2].onclick=()=>{state.roundLoser=p.id;d.style.border="1px solid var(--pink)"};$("winnerChoices").append(d)})}
+function finishRound(){let bestId=Object.values(state.contributionVotes)[0];let best=state.contributions.find(c=>c.id===bestId);if(best&&state.leaderboard[best.playerId]!==undefined)state.leaderboard[best.playerId]+=5;else if(best)state.leaderboard[best.playerId]=(state.leaderboard[best.playerId]||0)+5;
+if(state.roundWinner)state.leaderboard[state.roundWinner]=(state.leaderboard[state.roundWinner]||0)+5;
+if(state.roundLoser)state.leaderboard[state.roundLoser]=(state.leaderboard[state.roundLoser]||0)-3;
+state.players.forEach(p=>p.score=state.leaderboard[p.id]||0);
+$("resultHeadline").textContent="Runde "+state.round+" abgeschlossen";let bestName=best?best.player:"Niemand";$("resultDetails").innerHTML=`<div class="notice">Beste Ergänzung: <b>${escapeHtml(bestName)}</b> (+5 Punkte)</div><div class="notice">Rundensieger: <b>${escapeHtml(state.players.find(p=>p.id===state.roundWinner)?.name||"Nicht festgelegt")}</b> (+5 Punkte)</div><div class="notice">Letzter Platz: <b>${escapeHtml(state.players.find(p=>p.id===state.roundLoser)?.name||"Nicht festgelegt")}</b> (−3 Punkte)</div>`;renderLeaderboard();show("results")}
+function renderLeaderboard(){let sorted=[...state.players].sort((a,b)=>(state.leaderboard[b.id]||0)-(state.leaderboard[a.id]||0));$("leaderboard").innerHTML=sorted.map((p,i)=>`<div class="voteitem"><b>${i+1}. ${escapeHtml(p.name)}</b><span class="score">${state.leaderboard[p.id]||0}</span></div>`).join("")}
+function draw(){let c=$("pixelCanvas"),ctx=c.getContext("2d");ctx.fillStyle="#e7eef5";ctx.fillRect(0,0,c.width,c.height);for(let y=0;y<H;y++)for(let x=0;x<W;x++){let col=state.pixels[y*W+x];if(col){ctx.fillStyle=col;ctx.fillRect(x*S,y*S,S,S)}ctx.strokeStyle="#b9c8d8";ctx.lineWidth=.5;ctx.strokeRect(x*S,y*S,S,S)}}
+function cell(e){let r=$("pixelCanvas").getBoundingClientRect();let x=Math.floor((e.clientX-r.left)/r.width*W),y=Math.floor((e.clientY-r.top)/r.height*H);return {x,y}}
+function applyTool(x,y){if(x<0||y<0||x>=W||y>=H)return;let i=y*W+x;if(state.tool==="erase")state.pixels[i]=null;else if(state.tool==="fill"){let old=state.pixels[i];state.pixels=state.pixels.map(v=>v===old?state.color:v)}else if(state.tool==="player"){for(let yy=0;yy<3;yy++)for(let xx=0;xx<2;xx++)if(y+yy<H&&x+xx<W)state.pixels[(y+yy)*W+x+xx]=state.color}else if(state.tool==="object"){for(let yy=0;yy<2;yy++)for(let xx=0;xx<2;xx++)if(y+yy<H&&x+xx<W)state.pixels[(y+yy)*W+x+xx]=state.color}else state.pixels[i]=state.color;draw()}
+let painting=false;$("pixelCanvas").addEventListener("pointerdown",e=>{painting=true;let p=cell(e);applyTool(p.x,p.y)});$("pixelCanvas").addEventListener("pointermove",e=>{if(painting&&state.tool!=="fill"){let p=cell(e);applyTool(p.x,p.y)}});window.addEventListener("pointerup",()=>painting=false);
+$("tools").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.tool=b.dataset.tool;$("tools").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b))});
+colors.forEach(col=>{let b=document.createElement("button");b.className="swatch";b.style.background=col;b.title=col;b.onclick=()=>state.color=col;$("swatches").append(b)});
+$("clearCanvas").onclick=()=>{state.pixels=Array(W*H).fill(null);draw()};
+$("saveCanvas").onclick=()=>{let a=document.createElement("a");a.download="pixelparty-kreation.png";a.href=$("pixelCanvas").toDataURL();a.click()};
+$("addContribution").onclick=()=>{let title=$("contributionName").value.trim(),desc=$("contributionDesc").value.trim();if(!title)return toast("Name fehlt","Gib deiner Ergänzung einen Namen.");if(state.contributions.some(c=>c.playerId===state.me.id))return toast("Schon eingereicht","Pro Spieler ist ein Beitrag pro Runde möglich.");state.contributions.push({id:code(),playerId:state.me.id,player:state.me.name,title,desc:desc||"Neue Kreation"});$("contributionName").value="";$("contributionDesc").value="";renderContributions();toast("Beitrag eingereicht","Deine Ergänzung ist in der Runde dabei.")};
+$("createBtn").onclick=()=>{setMode($("modeCreate").value);enterRoom($("nameCreate").value,code(),true)};
+$("joinBtn").onclick=()=>{let c=$("joinCode").value.trim().toUpperCase();if(c.length!==6)return toast("Raumcode prüfen","Bitte einen sechsstelligen Raumcode eingeben.");setMode($("modeJoin").value);enterRoom($("nameJoin").value,c,false);toast("Demo-Modus","Ohne Supabase-Backend können andere Geräte diesem Raum noch nicht wirklich beitreten. Siehe README für die Einrichtung.")};
+$("modeLobby").onchange=e=>setMode(e.target.value);
+$("copyCode").onclick=()=>navigator.clipboard?.writeText(state.room).then(()=>toast("Kopiert","Raumcode wurde kopiert.")).catch(()=>toast("Raumcode",state.room));
+$("leaveBtn").onclick=()=>{clearInterval(state.interval);show("home")};
+$("randomGenres").onclick=newChoices;$("startVote").onclick=()=>{if(!state.votes[state.me.id])return toast("Erst abstimmen","Wähle einen der drei Spieltypen.");startBuild()};
+$("finishBuild").onclick=finishBuild;$("finishContributionVote").onclick=()=>{renderReview();toast("Abstimmung","Die Stimmen werden in der Auswertung berücksichtigt.")};$("finishRound").onclick=finishRound;
+$("nextRound").onclick=()=>{state.round++;newChoices();show("lobby")};$("backHome").onclick=()=>show("lobby");
+$("modeCreate").onchange=e=>setMode(e.target.value);$("modeJoin").onchange=e=>setMode(e.target.value);
+setMode("uni");
+})();
+</script>
+</body></html>
